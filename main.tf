@@ -92,7 +92,7 @@ resource "ibm_iam_service_id" "serviceID" {
 }
 
 resource "ibm_iam_service_policy" "policy" {
-  iam_service_id = "${ibm_iam_service_id.serviceID.id}"
+  iam_service_id = ibm_iam_service_id.serviceID.id
   roles        = ["Writer"]
 
   resources { 
