@@ -2,16 +2,12 @@ provider "ibm" {
   generation = 1
 }
 
-#*********************************************
-# Resource group creation
-#*********************************************
+
 resource "ibm_resource_group" "demo_group1" {
   name     = var.resource_group_name
 }
 
-#*********************************************
-#KMS
-#*********************************************
+
 resource "ibm_resource_instance" "kp_instance" {
   name     = "demo_KMS_instance"
   service  = "kms"
@@ -25,9 +21,7 @@ resource "ibm_kp_key" "cos_encrypt" {
   standard_key = false
 }
 
-#****************************************
-#provision CIS
-#*****************************************
+
 
 resource "ibm_cis" "demo_web_domain" {
   name              = "web_domain"
@@ -39,7 +33,7 @@ resource "ibm_cis" "demo_web_domain" {
 resource "ibm_cis_domain_settings" "demo_web_domain" {
   cis_id          = ibm_cis.demo_web_domain.id
   domain_id       = ibm_cis_domain.demo_web_domain.id
-  waf             = "on" #set this off to trigger an alert
+  waf             = "on" 
   ssl             = "full"
   min_tls_version = "1.2"
 }
@@ -49,9 +43,6 @@ resource "ibm_cis_domain" "demo_web_domain" {
   domain = "demo.ibm.com"
 }
 
-#*****************************************
-#provision COS
-#*****************************************
 
 resource "ibm_resource_instance" "cos_instance" {
   name              = "demo_cos_instance"
@@ -69,25 +60,17 @@ resource "ibm_cos_bucket" "standard-ams03" {
   key_protect          = ibm_kp_key.cos_encrypt.id
 }
 
-#******************************************
-# setup IAM
-#*****************************************
 
-#auth policy for cos to read kms keys
 resource "ibm_iam_authorization_policy" "policy" {
   source_service_name         = "cloud-object-storage"
   target_service_name         = "kms"
   roles                       = ["Reader"]
 }
 
-#*****************************************
-#user policies
-#*****************************************
 
 resource "ibm_iam_user_policy" "policy1" {
   ibm_id = var.user1
   roles  = ["Viewer", "Administrator"]
-
   resources  {
     service = "kms"
   }
@@ -103,9 +86,7 @@ resource "ibm_iam_user_policy" "policy2" {
   }
 }
 
-#*****************************************
-#service id
-#*****************************************
+
 resource "ibm_iam_service_id" "serviceID" {
   name = "demo-cis-dervice"
 }
@@ -120,9 +101,7 @@ resource "ibm_iam_service_policy" "policy" {
   }
 }
 
-#**********************************************
-#VPC Cluster
-#**********************************************
+
 
 resource "ibm_is_vpc" "vpc1" {
   name = "myvpc"
