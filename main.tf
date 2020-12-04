@@ -1,5 +1,5 @@
 provider "ibm" {
-  generation = 1
+  generation = 2
 }
 
 
