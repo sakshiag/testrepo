@@ -5,3 +5,8 @@ variable "user1" {
 variable "user2" {
     default="test2@in.ibm.com"
 }
+
+variable "resource_group_name" {
+    
+    default="default"
+}
